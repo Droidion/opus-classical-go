@@ -1,0 +1,16 @@
+{{define "base"}}
+    <!doctype html>
+    <html lang='en'>
+    <head>
+        <meta charset='utf-8'>
+        <link rel="icon" type="image/x-icon" href="/static/favicon.ico"/>
+        <title>{{template "title" .}} - Opus Classical</title></head>
+    <body>
+    {{template "header" .}}
+    <main>
+        {{template "main" .}}
+    </main>
+    {{template "footer" .}}
+    </body>
+    </html>
+{{end}}
