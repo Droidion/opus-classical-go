@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 	"opus-classical-go/internal/config"
+	"os"
 )
 
 type application struct {
@@ -19,13 +20,9 @@ func main() {
 	app := application{
 		cfg: config.Get(),
 	}
-	mux := http.NewServeMux()
-	fileServer := http.FileServer(http.Dir("./ui/static/"))
-	mux.Handle("GET /static/", http.StripPrefix("/static", fileServer))
-	mux.HandleFunc("GET /{$}", app.composersView)
-	mux.HandleFunc("GET /composer/{composerSlug}", app.worksView)
-	mux.HandleFunc("GET /composer/{composerSlug}/work/{workID}", app.recordingsView)
+
 	slog.Info("Web server started", "port", app.cfg.Port)
-	err := http.ListenAndServe(":4000", mux)
-	log.Fatal(err)
+	err := http.ListenAndServe(":4000", app.routes())
+	slog.Error(err.Error())
+	os.Exit(1)
 }
