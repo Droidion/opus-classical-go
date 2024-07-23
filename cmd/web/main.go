@@ -1,15 +1,18 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"log/slog"
 	"net/http"
 	"opus-classical-go/internal/config"
+	"opus-classical-go/internal/models"
 	"os"
 )
 
 type application struct {
-	cfg *config.Config
+	cfg     *config.Config
+	periods *models.PeriodModel
 }
 
 func main() {
@@ -18,14 +21,22 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
 	}
-	app := application{
-		cfg: config.Get(),
-	}
-	db, err := openDB(app.cfg.Database)
+	cfg := config.Get()
+	db, err := openDB(cfg.Database)
 	if err != nil {
 		log.Fatalf("Failed to connect to DB: %v", err)
 	}
 	defer db.Close()
+	app := application{
+		cfg:     cfg,
+		periods: &models.PeriodModel{DB: db},
+	}
+
+	periods, _ := app.periods.GetAll()
+	for _, period := range periods {
+		fmt.Printf("%#v\n", period)
+	}
+
 	slog.Info("Web server started", "port", app.cfg.Port)
 	err = http.ListenAndServe(":4000", app.routes())
 	slog.Error(err.Error())
