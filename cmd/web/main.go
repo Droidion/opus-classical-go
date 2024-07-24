@@ -11,8 +11,9 @@ import (
 )
 
 type application struct {
-	cfg     *config.Config
-	periods *models.PeriodModel
+	cfg       *config.Config
+	periods   *models.PeriodModel
+	composers *models.ComposerModel
 }
 
 func main() {
@@ -28,12 +29,16 @@ func main() {
 	}
 	defer db.Close()
 	app := application{
-		cfg:     cfg,
-		periods: &models.PeriodModel{DB: db},
+		cfg:       cfg,
+		periods:   &models.PeriodModel{DB: db},
+		composers: &models.ComposerModel{DB: db},
 	}
 
-	periods, _ := app.periods.GetAll()
-	for _, period := range periods {
+	composers, err := app.composers.GetAll()
+	if err != nil {
+		log.Fatalf("Failed to get composers: %v", err)
+	}
+	for _, period := range composers {
 		fmt.Printf("%#v\n", period)
 	}
 
