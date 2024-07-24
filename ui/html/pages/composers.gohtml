@@ -1,5 +1,14 @@
 {{define "title"}}Home{{end}}
 {{define "main"}}
-    <h2>Latest Snippets</h2>
-    <p>There's nothing to see here yet!!!</p>
+    <h2>Composers</h2>
+    {{range .}}
+        <h3>{{.Name}} {{.YearStart}} - {{.YearEnd}}</h3>
+        <ul>
+            {{range .Composers}}
+                <li>{{.FirstName}} {{.LastName}}</li>
+            {{end}}
+        </ul>
+    {{else}}
+        <p>No periods or composers found.</p>
+    {{end}}
 {{end}}

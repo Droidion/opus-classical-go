@@ -5,6 +5,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/pkg/errors"
 )
 
 type Composer struct {
@@ -28,11 +29,11 @@ type ComposerModel struct {
 func (m *ComposerModel) GetAll() ([]Composer, error) {
 	rows, err := m.DB.Query(context.Background(), "SELECT * FROM composers_with_countries")
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to query composers")
 	}
 	composers, err := pgx.CollectRows(rows, pgx.RowToStructByName[Composer])
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to map composers")
 	}
 	return composers, nil
 }

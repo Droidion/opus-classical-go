@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"log/slog"
 	"net/http"
@@ -32,14 +31,6 @@ func main() {
 		cfg:       cfg,
 		periods:   &models.PeriodModel{DB: db},
 		composers: &models.ComposerModel{DB: db},
-	}
-
-	composers, err := app.composers.GetAll()
-	if err != nil {
-		log.Fatalf("Failed to get composers: %v", err)
-	}
-	for _, period := range composers {
-		fmt.Printf("%#v\n", period)
 	}
 
 	slog.Info("Web server started", "port", app.cfg.Port)

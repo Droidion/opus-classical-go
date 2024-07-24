@@ -2,11 +2,18 @@ package main
 
 import (
 	"fmt"
+	"github.com/samber/lo"
 	"html/template"
 	"log/slog"
 	"net/http"
+	"opus-classical-go/internal/models"
 	"strconv"
 )
+
+type composerData struct {
+	models.Period
+	Composers []models.Composer
+}
 
 func (app *application) composersView(w http.ResponseWriter, r *http.Request) {
 	files := []string{
@@ -22,7 +29,28 @@ func (app *application) composersView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ts.ExecuteTemplate(w, "base", nil)
+	periods, err := app.periods.GetAll()
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+
+	composers, err := app.composers.GetAll()
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+
+	data := lo.Map(periods, func(period models.Period, _ int) composerData {
+		return composerData{
+			Period: period,
+			Composers: lo.Filter(composers, func(composer models.Composer, _ int) bool {
+				return composer.PeriodID == period.ID
+			}),
+		}
+	})
+
+	err = ts.ExecuteTemplate(w, "base", data)
 	if err != nil {
 		app.serverError(w, r, err)
 	}
