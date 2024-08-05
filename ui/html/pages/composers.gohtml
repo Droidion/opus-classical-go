@@ -5,7 +5,7 @@
         <h3>{{.Name}} {{.YearStart}}{{if .YearEnd.Valid}} - {{.YearEnd.Value}}{{end}}</h3>
         <ul>
             {{range .Composers}}
-                <li>{{.FirstName}} {{.LastName}}</li>
+                <li><a href="/composer/{{.Slug}}">{{.FirstName}} {{.LastName}}</a></li>
             {{end}}
         </ul>
     {{else}}
