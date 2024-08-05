@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/samber/lo"
-	"html/template"
 	"log/slog"
 	"net/http"
 	"opus-classical-go/internal/models"
@@ -16,19 +15,6 @@ type composerData struct {
 }
 
 func (app *application) composersView(w http.ResponseWriter, r *http.Request) {
-	files := []string{
-		"./ui/html/partials/header.gohtml",
-		"./ui/html/partials/footer.gohtml",
-		"./ui/html/base.gohtml",
-		"./ui/html/pages/composers.gohtml",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, r, err)
-		return
-	}
-
 	periods, err := app.periods.GetAll()
 	if err != nil {
 		app.serverError(w, r, err)
@@ -50,10 +36,7 @@ func (app *application) composersView(w http.ResponseWriter, r *http.Request) {
 		}
 	})
 
-	err = ts.ExecuteTemplate(w, "base", data)
-	if err != nil {
-		app.serverError(w, r, err)
-	}
+	app.render(w, r, http.StatusOK, "composers.gohtml", data)
 }
 
 func (app *application) worksView(w http.ResponseWriter, r *http.Request) {

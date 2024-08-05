@@ -2,7 +2,7 @@
 {{define "main"}}
     <h2>Composers</h2>
     {{range .}}
-        <h3>{{.Name}} {{.YearStart}} - {{.YearEnd}}</h3>
+        <h3>{{.Name}} {{.YearStart}}{{if .YearEnd.Valid}} - {{.YearEnd.Value}}{{end}}</h3>
         <ul>
             {{range .Composers}}
                 <li>{{.FirstName}} {{.LastName}}</li>
@@ -11,4 +11,4 @@
     {{else}}
         <p>No periods or composers found.</p>
     {{end}}
-{{end}}
+{{end}}†

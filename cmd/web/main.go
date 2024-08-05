@@ -1,6 +1,7 @@
 package main
 
 import (
+	"html/template"
 	"log"
 	"log/slog"
 	"net/http"
@@ -10,9 +11,10 @@ import (
 )
 
 type application struct {
-	cfg       *config.Config
-	periods   *models.PeriodModel
-	composers *models.ComposerModel
+	cfg           *config.Config
+	periods       *models.PeriodModel
+	composers     *models.ComposerModel
+	templateCache map[string]*template.Template
 }
 
 func main() {
@@ -22,15 +24,21 @@ func main() {
 		log.Fatalf("Failed to load config: %v", err)
 	}
 	cfg := config.Get()
+	templateCache, err := newTemplateCache()
+	if err != nil {
+		slog.Error(err.Error())
+		os.Exit(1)
+	}
 	db, err := openDB(cfg.Database)
 	if err != nil {
 		log.Fatalf("Failed to connect to DB: %v", err)
 	}
 	defer db.Close()
 	app := application{
-		cfg:       cfg,
-		periods:   &models.PeriodModel{DB: db},
-		composers: &models.ComposerModel{DB: db},
+		cfg:           cfg,
+		periods:       &models.PeriodModel{DB: db},
+		composers:     &models.ComposerModel{DB: db},
+		templateCache: templateCache,
 	}
 
 	slog.Info("Web server started", "port", app.cfg.Port)
