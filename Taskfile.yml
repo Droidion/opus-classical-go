@@ -1,8 +1,9 @@
 version: '3'
 
 tasks:
-  run:
+  dev:
     cmds:
+      - bunx @tailwindcss/cli@next -i ui/css/main.css -o ui/static/main.css
       - air
 
   test:

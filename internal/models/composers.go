@@ -37,3 +37,15 @@ func (m *ComposerModel) GetAll() ([]Composer, error) {
 	}
 	return composers, nil
 }
+
+func (m *ComposerModel) GetOneBySlug(slug *string) (*Composer, error) {
+	rows, err := m.DB.Query(context.Background(), "SELECT * FROM composers_with_countries WHERE slug = $1", slug)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to query composer by slug")
+	}
+	composer, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[Composer])
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to map composer")
+	}
+	return &composer, nil
+}
