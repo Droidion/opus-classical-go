@@ -44,15 +44,13 @@ func (m *WorkModel) GetWorksByComposerID(composerID int) ([]WorkByGenre, error) 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to map composer")
 	}
-	genreNames := make(map[int]string)
 	groupedWorks := lo.GroupBy(works, func(w Work) int {
-		genreNames[w.GenreID] = w.GenreName
 		return w.GenreID
 	})
 	worksByGenre := lo.MapToSlice(groupedWorks, func(genreID int, works []Work) WorkByGenre {
 		return WorkByGenre{
 			GenreID:   genreID,
-			GenreName: genreNames[genreID],
+			GenreName: works[0].GenreName,
 			Works:     works,
 		}
 	})
