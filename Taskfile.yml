@@ -5,6 +5,10 @@ tasks:
     cmds:
       - air
 
+  test:
+    cmds:
+      - go test -v ./...
+
   update:
     cmds:
       - go get -u -t ./...
