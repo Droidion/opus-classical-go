@@ -1,0 +1,13 @@
+{{ define "composer-card" }}
+    <div class="mb-3 mr-6">
+        <div>
+            <span>{{ .LastName }},&nbsp;</span>
+            <span class="font-light">{{ .FirstName }}</span>
+        </div>
+        <div class="text-xs font-light whitespace-nowrap">
+            <span>{{ .Countries }}</span>
+            <span class="vertical-separator"></span>
+            <span>{{ formatYearsRangeString .YearBorn .YearDied }}</span>
+        </div>
+    </div>
+{{ end }}

@@ -1,0 +1,15 @@
+{{ define "period-card" }}
+    <h2>
+        <span>{{ .Name }}</span>
+        <span> </span>
+        <span>{{ formatYearsRangeString .YearStart .YearEnd }}</span>
+    </h2>
+    <hr/>
+    <div class="mb-4 flex flex-wrap">
+        {{ range .Composers }}
+            <a href="/composer/{{.Slug}}">
+                {{ template "composer-card" .}}
+            </a>
+        {{ end }}
+    </div>
+{{ end }}

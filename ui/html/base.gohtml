@@ -8,11 +8,13 @@
         <link href="/static/main.css" rel="stylesheet">
     </head>
     <body>
-    {{template "header" .}}
-    <main>
-        {{template "main" .}}
-    </main>
-    {{template "footer" .}}
+    <div class="grid justify-items-center min-h-screen w-full grid-rows-[auto_1fr_auto]">
+        {{template "header" .}}
+        <main class="main flex flex-col w-full max-w-screen-xl overflow-auto px-4 pb-4">
+            {{template "main" .}}
+        </main>
+        {{template "footer" .}}
+    </div>
     </body>
     </html>
 {{end}}

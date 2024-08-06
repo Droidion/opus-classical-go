@@ -1,14 +1,9 @@
 {{define "title"}}Home{{end}}
 {{define "main"}}
-    <h2>Composers</h2>
-    {{range .}}
-        <h3>{{.Name}} {{.YearStart}}{{if .YearEnd.Valid}} - {{.YearEnd.Value}}{{end}}</h3>
-        <ul>
-            {{range .Composers}}
-                <li><a href="/composer/{{.Slug}}">{{.FirstName}} {{.LastName}}</a></li>
-            {{end}}
-        </ul>
-    {{else}}
-        <p>No periods or composers found.</p>
-    {{end}}
+    <div>
+        <h1>Composers</h1>
+        {{ range .}}
+            {{ template "period-card" .}}
+        {{ end }}
+    </div>
 {{end}}†
