@@ -15,6 +15,9 @@ type application struct {
 	periods       *models.PeriodModel
 	composers     *models.ComposerModel
 	works         *models.WorkModel
+	performers    *models.PerformerModel
+	links         *models.LinkModel
+	recordings    *models.RecordingModel
 	templateCache map[string]*template.Template
 }
 
@@ -40,6 +43,9 @@ func main() {
 		periods:       &models.PeriodModel{DB: db},
 		composers:     &models.ComposerModel{DB: db},
 		works:         &models.WorkModel{DB: db},
+		performers:    &models.PerformerModel{DB: db},
+		links:         &models.LinkModel{DB: db},
+		recordings:    &models.RecordingModel{DB: db},
 		templateCache: templateCache,
 	}
 
