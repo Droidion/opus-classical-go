@@ -69,57 +69,57 @@ func TestCenturyEqual(t *testing.T) {
 
 func TestFormatYearsRangeString(t *testing.T) {
 	tests := []struct {
-		startYear  int
+		startYear  pgtype.Int4
 		finishYear pgtype.Int4
 		expected   string
 	}{
-		{1720, pgtype.Int4{Int32: 1795, Valid: true}, "1720–95"},
-		{1720, pgtype.Int4{Int32: 1805, Valid: true}, "1720–1805"},
-		{1720, pgtype.Int4{Valid: false}, "1720–"},
-		{0, pgtype.Int4{Valid: false}, ""},
-		{0, pgtype.Int4{Int32: 1805, Valid: true}, "1805"},
+		{pgtype.Int4{Int32: 1720, Valid: true}, pgtype.Int4{Int32: 1795, Valid: true}, "1720–95"},
+		{pgtype.Int4{Int32: 1720, Valid: true}, pgtype.Int4{Int32: 1805, Valid: true}, "1720–1805"},
+		{pgtype.Int4{Int32: 1720, Valid: true}, pgtype.Int4{Valid: false}, "1720–"},
+		{pgtype.Int4{Int32: 0, Valid: true}, pgtype.Int4{Valid: false}, ""},
+		{pgtype.Int4{Int32: 0, Valid: true}, pgtype.Int4{Int32: 1805, Valid: true}, "1805"},
 	}
 
 	for _, test := range tests {
 		result := FormatYearsRangeString(test.startYear, test.finishYear)
 		if result != test.expected {
-			t.Errorf("FormatYearsRangeString(%d, %v) = %s; want %s", test.startYear, test.finishYear, result, test.expected)
+			t.Errorf("FormatYearsRangeString(%d, %d) = %s; want %s", test.startYear.Int32, test.finishYear.Int32, result, test.expected)
 		}
 	}
 }
 
 func TestFormatWorkLength(t *testing.T) {
 	tests := []struct {
-		minutes  int
+		minutes  pgtype.Int4
 		expected string
 	}{
-		{155, "2h 35m"},
-		{60, "1h"},
-		{30, "30m"},
-		{0, ""},
-		{-10, ""},
-		{90, "1h 30m"},
+		{pgtype.Int4{Int32: 155, Valid: true}, "2h 35m"},
+		{pgtype.Int4{Int32: 60, Valid: true}, "1h"},
+		{pgtype.Int4{Int32: 30, Valid: true}, "30m"},
+		{pgtype.Int4{Int32: 0, Valid: true}, ""},
+		{pgtype.Int4{Int32: -10, Valid: true}, ""},
+		{pgtype.Int4{Int32: 90, Valid: true}, "1h 30m"},
 	}
 
 	for _, test := range tests {
 		result := FormatWorkLength(test.minutes)
 		if result != test.expected {
-			t.Errorf("FormatWorkLength(%d) = %s; want %s", test.minutes, result, test.expected)
+			t.Errorf("FormatWorkLength(%d) = %s; want %s", test.minutes.Int32, result, test.expected)
 		}
 	}
 }
 
 func TestFormatCatalogueName(t *testing.T) {
 	tests := []struct {
-		name     *string
-		number   *int
-		postfix  *string
+		name     pgtype.Text
+		number   pgtype.Int4
+		postfix  pgtype.Text
 		expected string
 	}{
-		{strPtr("BWV"), intPtr(12), strPtr("p"), "BWV 12p"},
-		{strPtr("Op."), intPtr(9), nil, "Op. 9"},
-		{nil, intPtr(9), nil, ""},
-		{strPtr("BWV"), nil, nil, ""},
+		{pgtype.Text{String: "BWV", Valid: true}, pgtype.Int4{Int32: 12, Valid: true}, pgtype.Text{String: "p", Valid: true}, "BWV 12p"},
+		{pgtype.Text{String: "Op.", Valid: true}, pgtype.Int4{Int32: 9, Valid: true}, pgtype.Text{Valid: false}, "Op. 9"},
+		{pgtype.Text{Valid: false}, pgtype.Int4{Int32: 9, Valid: true}, pgtype.Text{Valid: false}, ""},
+		{pgtype.Text{String: "BWV", Valid: true}, pgtype.Int4{Valid: false}, pgtype.Text{Valid: false}, ""},
 	}
 
 	for _, test := range tests {
@@ -133,30 +133,20 @@ func TestFormatCatalogueName(t *testing.T) {
 func TestFormatWorkName(t *testing.T) {
 	tests := []struct {
 		title    string
-		no       *int
-		nickname *string
-		skipHtml bool
+		no       pgtype.Int4
+		nickname pgtype.Text
 		expected string
 	}{
-		{"Symphony", intPtr(9), strPtr("Great"), false, "Symphony No. 9 Great"},
-		{"Sonata", intPtr(14), nil, false, "Sonata No. 14"},
-		{"Prelude", nil, strPtr("Raindrop"), true, "Prelude Raindrop"},
-		{"", nil, nil, false, ""},
+		{"Symphony", pgtype.Int4{Int32: 9, Valid: true}, pgtype.Text{String: "Great", Valid: true}, "Symphony No. 9 Great"},
+		{"Sonata", pgtype.Int4{Int32: 14, Valid: true}, pgtype.Text{Valid: false}, "Sonata No. 14"},
+		{"Prelude", pgtype.Int4{Valid: false}, pgtype.Text{String: "Raindrop", Valid: true}, "Prelude Raindrop"},
+		{"", pgtype.Int4{Valid: false}, pgtype.Text{Valid: false}, ""},
 	}
 
 	for _, test := range tests {
-		result := FormatWorkName(test.title, test.no, test.nickname, test.skipHtml)
+		result := FormatWorkName(test.title, test.no, test.nickname)
 		if result != test.expected {
-			t.Errorf("FormatWorkName(%s, %v, %v, %v) = %s; want %s", test.title, test.no, test.nickname, test.skipHtml, result, test.expected)
+			t.Errorf("FormatWorkName(%s, %v, %v) = %s; want %s", test.title, test.no, test.nickname, result, test.expected)
 		}
 	}
-}
-
-// Helper functions for creating pointers
-func strPtr(s string) *string {
-	return &s
-}
-
-func intPtr(i int) *int {
-	return &i
 }

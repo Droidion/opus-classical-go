@@ -39,7 +39,10 @@ func FormatYearsRangeString(startYear pgtype.Int4, finishYear pgtype.Int4) strin
 	if !startYear.Valid && !finishYear.Valid {
 		return ""
 	}
-	if !finishYear.Valid {
+	if !isValidYear(int(startYear.Int32)) && !isValidYear(int(finishYear.Int32)) {
+		return ""
+	}
+	if startYear.Valid && isValidYear(int(startYear.Int32)) && !finishYear.Valid {
 		return fmt.Sprintf("%d–", startYear.Int32)
 	}
 	finishYearInt := int(finishYear.Int32)
