@@ -6,11 +6,15 @@
         <div class="text-xs font-light">
             {{ if .CatalogueName.Valid }}
                 <span>{{ formatCatalogueName .CatalogueName .CatalogueNumber .CataloguePostfix }}</span>
-                <span class="vertical-separator"></span>
+                {{ if or .YearStart.Valid .YearFinish.Valid .AverageMinutes.Valid }}
+                    <span class="vertical-separator"></span>
+                {{ end }}
             {{ end }}
             {{ if or .YearStart.Valid .YearFinish.Valid }}
                 <span>{{ formatYearsRangeString .YearStart .YearFinish }}</span>
-                <span class="vertical-separator"></span>
+                {{ if .AverageMinutes.Valid }}
+                    <span class="vertical-separator"></span>
+                {{ end }}
             {{ end}}
             {{ if .AverageMinutes.Valid }}
                 {{ formatWorkLength .AverageMinutes }}

@@ -7,6 +7,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
+	"sort"
 )
 
 type Work struct {
@@ -21,6 +22,7 @@ type Work struct {
 	No               pgtype.Int4 `db:"no"`
 	Nickname         pgtype.Text `db:"nickname"`
 	ComposerID       int         `db:"composer_id"`
+	Sort             pgtype.Int4 `db:"sort"`
 	GenreID          int         `db:"genre_id"`
 	GenreName        string      `db:"genre_name"`
 }
@@ -36,7 +38,7 @@ type WorkModel struct {
 }
 
 func (m *WorkModel) GetWorksByComposerID(composerID int) ([]WorkByGenre, error) {
-	rows, err := m.DB.Query(context.Background(), "SELECT * FROM works_with_genres WHERE composer_id = $1", composerID)
+	rows, err := m.DB.Query(context.Background(), "SELECT * FROM works_with_genres WHERE composer_id = $1 ORDER BY genre_name, sort, year_finish ", composerID)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to query composer by slug")
 	}
@@ -53,6 +55,9 @@ func (m *WorkModel) GetWorksByComposerID(composerID int) ([]WorkByGenre, error) 
 			GenreName: works[0].GenreName,
 			Works:     works,
 		}
+	})
+	sort.Slice(worksByGenre, func(i, j int) bool {
+		return worksByGenre[i].GenreName < worksByGenre[j].GenreName
 	})
 	return worksByGenre, nil
 }
