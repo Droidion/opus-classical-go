@@ -640,6 +640,9 @@
   .pb-4 {
     padding-bottom: var(--spacing-4, 1rem);
   }
+  .text-center {
+    text-align: center;
+  }
   .font-serif {
     font-family: var(--font-family-serif, ui-serif, Georgia, Cambria, "Times New Roman", Times,
       serif);

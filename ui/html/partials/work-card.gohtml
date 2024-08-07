@@ -1,0 +1,20 @@
+{{ define "work-card" }}
+    <div class="mb-3 mr-6">
+        <div>
+            <span>{{ formatWorkName .Title .No .Nickname }}</span>
+        </div>
+        <div class="text-xs font-light">
+            {{ if .CatalogueName.Valid }}
+                <span>{{ formatCatalogueName .CatalogueName .CatalogueNumber .CataloguePostfix }}</span>
+                <span class="vertical-separator"></span>
+            {{ end }}
+            {{ if or .YearStart.Valid .YearFinish.Valid }}
+                <span>{{ formatYearsRangeString .YearStart .YearFinish }}</span>
+                <span class="vertical-separator"></span>
+            {{ end}}
+            {{ if .AverageMinutes.Valid }}
+                {{ formatWorkLength .AverageMinutes }}
+            {{ end }}
+        </div>
+    </div>
+{{ end }}

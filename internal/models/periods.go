@@ -10,7 +10,7 @@ import (
 type Period struct {
 	ID        int         `db:"id"`
 	Name      string      `db:"name"`
-	YearStart int         `db:"year_start"`
+	YearStart pgtype.Int4 `db:"year_start"`
 	YearEnd   pgtype.Int4 `db:"year_end"`
 	Slug      string      `db:"slug"`
 }

@@ -12,7 +12,7 @@ type Composer struct {
 	ID            int         `db:"id"`
 	FirstName     string      `db:"first_name"`
 	LastName      string      `db:"last_name"`
-	YearBorn      int         `db:"year_born"`
+	YearBorn      pgtype.Int4 `db:"year_born"`
 	YearDied      pgtype.Int4 `db:"year_died"`
 	PeriodID      int         `db:"period_id"`
 	Slug          string      `db:"slug"`

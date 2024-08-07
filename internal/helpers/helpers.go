@@ -35,27 +35,30 @@ func centuryEqual(year1, year2 int) bool {
 // FormatYearsRangeString formats the range of two years into the string, e.g. "1720–95", or "1720–1805", or "1720–".
 // Start year and dash are always present.
 // It's supposed to be used for lifespans, meaning we always have birth, but may not have death.
-func FormatYearsRangeString(startYear int, finishYear pgtype.Int4) string {
-	if !isValidYear(startYear) && !finishYear.Valid {
+func FormatYearsRangeString(startYear pgtype.Int4, finishYear pgtype.Int4) string {
+	if !startYear.Valid && !finishYear.Valid {
 		return ""
 	}
 	if !finishYear.Valid {
-		return fmt.Sprintf("%d–", startYear)
+		return fmt.Sprintf("%d–", startYear.Int32)
 	}
 	finishYearInt := int(finishYear.Int32)
-	if !isValidYear(startYear) {
+	if !startYear.Valid || !isValidYear(int(startYear.Int32)) {
 		return strconv.Itoa(finishYearInt)
 	}
-	if centuryEqual(startYear, finishYearInt) {
-		return fmt.Sprintf("%d–%s", startYear, sliceYear(finishYearInt))
+	if centuryEqual(int(startYear.Int32), finishYearInt) {
+		return fmt.Sprintf("%d–%s", startYear.Int32, sliceYear(finishYearInt))
 	}
-	return fmt.Sprintf("%d–%d", startYear, finishYearInt)
+	return fmt.Sprintf("%d–%d", startYear.Int32, finishYearInt)
 }
 
 // FormatWorkLength formats minutes into a string with hours and minutes, like "2h 35m"
-func FormatWorkLength(lengthInMinutes int) string {
-	hours := lengthInMinutes / 60
-	minutes := lengthInMinutes % 60
+func FormatWorkLength(lengthInMinutes pgtype.Int4) string {
+	if !lengthInMinutes.Valid {
+		return ""
+	}
+	hours := lengthInMinutes.Int32 / 60
+	minutes := lengthInMinutes.Int32 % 60
 	if hours == 0 && minutes == 0 {
 		return ""
 	}
@@ -72,32 +75,28 @@ func FormatWorkLength(lengthInMinutes int) string {
 }
 
 // FormatCatalogueName formats catalogue name of the musical work, like "BWV 12p".
-func FormatCatalogueName(catalogueName *string, catalogueNumber *int, cataloguePostfix *string) string {
-	if catalogueName == nil || catalogueNumber == nil {
+func FormatCatalogueName(catalogueName pgtype.Text, catalogueNumber pgtype.Int4, cataloguePostfix pgtype.Text) string {
+	if !catalogueName.Valid || !catalogueNumber.Valid {
 		return ""
 	}
 	postfix := ""
-	if cataloguePostfix != nil {
-		postfix = *cataloguePostfix
+	if cataloguePostfix.Valid {
+		postfix = cataloguePostfix.String
 	}
-	return fmt.Sprintf("%s %d%s", *catalogueName, *catalogueNumber, postfix)
+	return fmt.Sprintf("%s %d%s", catalogueName.String, catalogueNumber.Int32, postfix)
 }
 
 // FormatWorkName formats music work full name, like "Symphony No. 9 Great".
-func FormatWorkName(workTitle string, workNo *int, workNickname *string, skipHtml bool) string {
+func FormatWorkName(workTitle string, workNo pgtype.Int4, workNickname pgtype.Text) string {
 	if workTitle == "" {
 		return ""
 	}
 	workName := workTitle
-	if workNo != nil {
-		workName = fmt.Sprintf("%s No. %d", workName, *workNo)
+	if workNo.Valid {
+		workName = fmt.Sprintf("%s No. %d", workName, workNo.Int32)
 	}
-	if workNickname != nil {
-		if skipHtml {
-			workName = fmt.Sprintf("%s %s", workName, *workNickname)
-		} else {
-			workName = fmt.Sprintf("%s %s", workName, *workNickname)
-		}
+	if workNickname.Valid {
+		workName = fmt.Sprintf("%s %s", workName, workNickname.String)
 	}
 	return workName
 }

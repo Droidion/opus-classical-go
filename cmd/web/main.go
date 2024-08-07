@@ -14,6 +14,7 @@ type application struct {
 	cfg           *config.Config
 	periods       *models.PeriodModel
 	composers     *models.ComposerModel
+	works         *models.WorkModel
 	templateCache map[string]*template.Template
 }
 
@@ -38,6 +39,7 @@ func main() {
 		cfg:           cfg,
 		periods:       &models.PeriodModel{DB: db},
 		composers:     &models.ComposerModel{DB: db},
+		works:         &models.WorkModel{DB: db},
 		templateCache: templateCache,
 	}
 

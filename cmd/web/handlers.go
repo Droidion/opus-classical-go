@@ -39,6 +39,11 @@ func (app *application) composersView(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, http.StatusOK, "composers.gohtml", data)
 }
 
+type workData struct {
+	Works    []models.WorkByGenre
+	Composer models.Composer
+}
+
 func (app *application) worksView(w http.ResponseWriter, r *http.Request) {
 	composerSlug := r.PathValue("composerSlug")
 	if composerSlug == "" {
@@ -46,7 +51,25 @@ func (app *application) worksView(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	fmt.Fprintf(w, "Request composer %s", composerSlug)
+
+	composer, err := app.composers.GetOneBySlug(&composerSlug)
+	if err != nil {
+		slog.Error("Error finding composer by slug", "error", err)
+		http.NotFound(w, r)
+		return
+	}
+
+	works, err := app.works.GetWorksByComposerID(composer.ID)
+	if err != nil {
+		slog.Error("Error finding works by composer ID", "error", err)
+		http.NotFound(w, r)
+		return
+	}
+
+	app.render(w, r, http.StatusOK, "works.gohtml", workData{
+		Works:    works,
+		Composer: *composer,
+	})
 }
 
 func (app *application) recordingsView(w http.ResponseWriter, r *http.Request) {
