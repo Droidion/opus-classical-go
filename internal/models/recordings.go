@@ -22,7 +22,7 @@ type RecordingModel struct {
 	DB *pgxpool.Pool
 }
 
-func (m *LinkModel) GetRecordingsByWork(workID int) ([]Recording, error) {
+func (m *RecordingModel) GetRecordingsByWork(workID int) ([]Recording, error) {
 	rows, err := m.DB.Query(context.Background(), "SELECT * FROM recordings_with_labels WHERE work_id = $1", workID)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to query recordings")

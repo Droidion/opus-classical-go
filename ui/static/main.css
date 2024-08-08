@@ -557,9 +557,18 @@
   .z-10 {
     z-index: 10;
   }
+  .float-left {
+    float: left;
+  }
   .mx-3 {
     margin-left: var(--spacing-3, 0.75rem);
     margin-right: var(--spacing-3, 0.75rem);
+  }
+  .mt-2 {
+    margin-top: var(--spacing-2, 0.5rem);
+  }
+  .mr-2 {
+    margin-right: var(--spacing-2, 0.5rem);
   }
   .mr-4 {
     margin-right: var(--spacing-4, 1rem);
@@ -567,11 +576,20 @@
   .mr-6 {
     margin-right: var(--spacing-6, 1.5rem);
   }
+  .mr-8 {
+    margin-right: var(--spacing-8, 2rem);
+  }
+  .mb-1\.5 {
+    margin-bottom: var(--spacing-1_5, 0.375rem);
+  }
   .mb-3 {
     margin-bottom: var(--spacing-3, 0.75rem);
   }
   .mb-4 {
     margin-bottom: var(--spacing-4, 1rem);
+  }
+  .mb-6 {
+    margin-bottom: var(--spacing-6, 1.5rem);
   }
   .ml-2 {
     margin-left: var(--spacing-2, 0.5rem);
@@ -591,6 +609,9 @@
   .h-16 {
     height: var(--spacing-16, 4rem);
   }
+  .h-24 {
+    height: var(--spacing-24, 6rem);
+  }
   .min-h-screen {
     min-height: 100vh;
   }
@@ -600,8 +621,17 @@
   .w-12 {
     width: var(--spacing-12, 3rem);
   }
+  .w-24 {
+    width: var(--spacing-24, 6rem);
+  }
   .w-full {
     width: 100%;
+  }
+  .min-w-full {
+    min-width: 100%;
+  }
+  .flex-1 {
+    flex: 1;
   }
   .grid-rows-\[auto_1fr_auto\] {
     grid-template-rows: auto 1fr auto;
@@ -629,6 +659,13 @@
   }
   .whitespace-nowrap {
     white-space: nowrap;
+  }
+  .border {
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+  }
+  .border-black\/20 {
+    border-color: color-mix(in srgb, var(--color-black, #000000) 20%, transparent);
   }
   .bg-black\/20 {
     background-color: color-mix(in srgb, var(--color-black, #000000) 20%, transparent);
@@ -661,6 +698,9 @@
   .font-medium {
     font-weight: 500;
   }
+  .leading-5 {
+    line-height: var(--line-height-5, 1.25rem);
+  }
   .hover\:no-underline {
     &:hover {
       text-decoration-line: none;
@@ -669,6 +709,11 @@
   .xl\:sticky {
     @media (width >= 80rem) {
       position: sticky;
+    }
+  }
+  .xl\:mr-6 {
+    @media (width >= 80rem) {
+      margin-right: var(--spacing-6, 1.5rem);
     }
   }
   .xl\:ml-4 {
@@ -686,9 +731,24 @@
       height: var(--spacing-24, 6rem);
     }
   }
+  .xl\:h-52 {
+    @media (width >= 80rem) {
+      height: var(--spacing-52, 13rem);
+    }
+  }
   .xl\:w-16 {
     @media (width >= 80rem) {
       width: var(--spacing-16, 4rem);
+    }
+  }
+  .xl\:w-52 {
+    @media (width >= 80rem) {
+      width: var(--spacing-52, 13rem);
+    }
+  }
+  .xl\:min-w-\[450px\] {
+    @media (width >= 80rem) {
+      min-width: 450px;
     }
   }
   .xl\:bg-white {
@@ -706,6 +766,11 @@
     @media (width >= 80rem) {
       font-size: var(--font-size-base, 1rem);
       line-height: var(--font-size-base--line-height, 1.5rem);
+    }
+  }
+  .dark\:border-white\/20 {
+    @media (prefers-color-scheme: dark) {
+      border-color: color-mix(in srgb, var(--color-white, #FFFFFF) 20%, transparent);
     }
   }
   .dark\:bg-mineshaft {
@@ -808,6 +873,13 @@
     }
   }
 }
+@supports (-moz-orient: inline) {
+  @layer base {
+    *, ::before, ::after, ::backdrop {
+      --tw-border-style: solid;
+    }
+  }
+}
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -833,4 +905,9 @@
     transform: none;
     animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
   }
+}
+@property --tw-border-style {
+  syntax: "<custom-ident>";
+  inherits: false;
+  initial-value: solid;
 }

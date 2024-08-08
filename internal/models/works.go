@@ -37,6 +37,18 @@ type WorkModel struct {
 	DB *pgxpool.Pool
 }
 
+func (m *WorkModel) GetWorkByID(workID int) (*Work, error) {
+	rows, err := m.DB.Query(context.Background(), "SELECT * FROM works_with_genres WHERE id = $1", workID)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to query work by id")
+	}
+	work, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[Work])
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to map work")
+	}
+	return &work, nil
+}
+
 func (m *WorkModel) GetWorksByComposerID(composerID int) ([]WorkByGenre, error) {
 	rows, err := m.DB.Query(context.Background(), "SELECT * FROM works_with_genres WHERE composer_id = $1 ORDER BY genre_name, sort, year_finish ", composerID)
 	if err != nil {

@@ -19,7 +19,7 @@ type LinkModel struct {
 	DB *pgxpool.Pool
 }
 
-func (m *LinkModel) GetLinksByRecordings(recordingIDs []int32) ([]Link, error) {
+func (m *LinkModel) GetLinksByRecordings(recordingIDs []int) ([]Link, error) {
 	rows, err := m.DB.Query(context.Background(), "SELECT * FROM links_with_streamers WHERE recording_id = any($1)", recordingIDs)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to query links")

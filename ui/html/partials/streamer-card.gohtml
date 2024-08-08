@@ -1,0 +1,12 @@
+{{ define "streamer-card" }}
+    <div class="mr-2 mt-2">
+        <a href="{{ .LinkPrefix }}{{ .Link }}">
+            <img
+                    src="/static/{{ .Icon }}"
+                    height="24"
+                    width="24"
+                    alt="{{ .Streamer }}"
+            />
+        </a>
+    </div>
+{{ end }}

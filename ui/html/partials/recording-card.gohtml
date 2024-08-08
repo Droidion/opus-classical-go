@@ -1,0 +1,28 @@
+{{ define "recording-card" }}
+    <div class="mb-6 mr-8 mt-2 flex min-w-full flex-1 xl:min-w-[450px]">
+        <img
+                class="cover float-left mr-4 h-24 w-24 border border-black/20 xl:mr-6 xl:h-52 xl:w-52 dark:border-white/20"
+                src="{{ .ImagesURL }}/{{ .CoverName }}"
+                alt="Recording cover."
+                width="400"
+                height="400"
+        />
+        <div>
+            {{ range .Performers }}
+                {{ template "performer-card" . }}
+            {{ end }}
+            <div class="text-xs font-light">
+                <span>{{ .Label }}</span>
+                <span class="vertical-separator"></span>
+                <span>{{ formatYearsRangeString .YearStart .YearFinish }}</span>
+                <span class="vertical-separator"></span>
+                <span>{{ formatWorkLength .Length }}</span>
+            </div>
+            <div class="flex items-center">
+                {{ range .Links}}
+                    {{ template "streamer-card" . }}
+                {{ end}}
+            </div>
+        </div>
+    </div>
+{{ end }}

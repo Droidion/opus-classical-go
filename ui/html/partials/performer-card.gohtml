@@ -1,0 +1,11 @@
+{{ define "performer-card" }}
+    <div class="mb-1.5 leading-5">
+      <span>
+          {{ if .FirstName.Valid }}
+              {{ .FirstName.String }}&nbsp;
+          {{ end }}
+          {{ .LastName }}&nbsp;
+      </span>
+        <span class="text-xs font-light">{{ .Instrument }}</span>
+    </div>
+{{ end }}

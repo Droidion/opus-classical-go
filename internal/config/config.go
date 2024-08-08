@@ -5,8 +5,9 @@ import (
 )
 
 type Config struct {
-	Port     string `mapstructure:"Port"`
-	Database string `mapstructure:"Database"`
+	Port      string `mapstructure:"Port"`
+	Database  string `mapstructure:"Database"`
+	ImagesURL string `mapstructure:"Images"`
 }
 
 var config *Config

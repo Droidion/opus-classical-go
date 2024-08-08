@@ -1,0 +1,23 @@
+{{define "title"}}Home{{end}}
+{{define "main"}}
+    <div>
+        <h1>
+            <span>{{ formatWorkName .Work.Title .Work.No .Work.Nickname}}</span>
+        </h1>
+        <div class="mb-4 w-full text-center">
+            <a href="/composer/{{ .Composer.Slug }}">
+                {{ .Composer.FirstName }}&nbsp;{{ .Composer.LastName }}
+            </a>
+            {{ if or .Work.YearStart.Valid .Work.YearFinish.Valid}}
+                <span>, {{ formatYearsRangeString .Work.YearStart .Work.YearFinish}}</span>
+            {{ end }}
+        </div>
+        <h2>Recommended Recordings</h2>
+        <hr/>
+        <div class="full-width mb-4 flex flex-wrap">
+            {{ range .Recordings }}
+                {{ template "recording-card" . }}
+            {{ end }}
+        </div>
+    </div>
+{{end}}
